@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Playfair+Display:ital@0;1&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3d0000;
+            border-radius: 2px;
+        }
+
+        body {
+            background: #000;
+            color: #c9a0a0;
+            font-family: 'Cormorant Garamond', serif;
+            overflow-x: hidden;
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(180, 50, 50, 0.4);
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) translateX(0px);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% {
+                transform: translateY(-100px) translateX(30px);
+                opacity: 0;
+            }
+        }
+
+        /* Rose petals */
+        .petal {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #8b0000, #3d0000);
+            border-radius: 50% 0 50% 0;
+            pointer-events: none;
+            z-index: 1;
+            animation: petalFall linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes petalFall {
+            0% {
+                transform: translateY(-20px) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.3; }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Hero section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-top-line {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 13px;
+            letter-spacing: 8px;
+            color: #5a2020;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeUp 2s forwards 0.5s;
+        }
+
+        .hero-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 120px;
+            color: #8b0000;
+            text-shadow:
+                0 0 40px rgba(139, 0, 0, 0.5),
+                0 0 80px rgba(139, 0, 0, 0.2);
+            opacity: 0;
+            animation: fadeUp 2s forwards 1s;
+            line-height: 1;
+        }
+
+        .hero-sub {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            letter-spacing: 6px;
+            color: #5a2020;
+            text-transform: uppercase;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeUp 2s forwards 1.5s;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            animation: fadeUp 2s forwards 2.5s;
+        }
+
+        .scroll-hint span {
+            font-size: 11px;
+            letter-spacing: 4px;
+            color: #3d1515;
+            text-transform: uppercase;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 50px;
+            background: linear-gradient(to bottom, #8b0000, transparent);
+            animation: scrollLine 2s infinite;
+        }
+
+        @keyframes scrollLine {
+            0% { transform: scaleY(0); transform-origin: top; }
+            50% { transform: scaleY(1); transform-origin: top; }
+            51% { transform: scaleY(1); transform-origin: bottom; }
+            100% { transform: scaleY(0); transform-origin: bottom; }
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 60px 0 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .divider-line {
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #3d0000);
+        }
+
+        .divider-line.right {
+            background: linear-gradient(to left, transparent, #3d0000);
+        }
+
+        .divider-heart {
+            color: #8b0000;
+            font-size: 20px;
+            text-shadow: 0 0 20px rgba(139, 0, 0, 0.8);
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            14% { transform: scale(1.2); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.1); }
+            70% { transform: scale(1); }
+        }
+
+        /* Letter section */
+        .letter-section {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 40px 100px;
+        }
+
+        .letter-label {
+            font-family: 'Great Vibes', cursive;
+            font-size: 50px;
+            color: #8b0000;
+            text-align: center;
+            margin-bottom: 60px;
+            opacity: 0;
+            text-shadow: 0 0 30px rgba(139, 0, 0, 0.4);
+            animation: fadeUp 1.5s forwards;
+            animation-play-state: paused;
+        }
+
+        .letter-label.visible {
+            animation-play-state: running;
+        }
+
+        .letter-paragraph {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            line-height: 2.2;
+            color: #b08080;
+            margin-bottom: 50px;
+            font-weight: 300;
+            font-style: italic;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1.2s ease, transform 1.2s ease;
+        }
+
+        .letter-paragraph.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .letter-paragraph span.highlight {
+            color: #c9a0a0;
+            font-style: normal;
+            font-weight: 400;
+        }
+
+        /* Proposal section */
+        .proposal-section {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 80px 40px 150px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .proposal-question {
+            font-family: 'Great Vibes', cursive;
+            font-size: 80px;
+            color: #8b0000;
+            text-shadow:
+                0 0 40px rgba(139, 0, 0, 0.6),
+                0 0 80px rgba(139, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1.5s ease, transform 1.5s ease;
+            line-height: 1.3;
+        }
+
+        .proposal-question.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .proposal-sub {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            letter-spacing: 6px;
+            color: #5a2020;
+            text-transform: uppercase;
+            margin-top: 30px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1.5s ease 0.5s, transform 1.5s ease 0.5s;
+        }
+
+        .proposal-sub.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Final heart */
+        .final-heart {
+            font-size: 60px;
+            margin-top: 60px;
+            opacity: 0;
+            transform: scale(0);
+            transition: opacity 1.5s ease 1s, transform 1.5s ease 1s;
+            display: block;
+            animation: none;
+        }
+
+        .final-heart.visible {
+            opacity: 1;
+            transform: scale(1);
+            animation: heartbeat 1.5s infinite 2.5s;
+        }
+
+        /* Background glow */
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(80, 0, 0, 0.15), transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: glowPulse 4s infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Decorative corner */
+        .corner-deco {
+            position: fixed;
+            width: 80px;
+            height: 80px;
+            border-color: #3d0000;
+            border-style: solid;
+            opacity: 0.4;
+            z-index: 3;
+        }
+
+        .corner-deco.tl {
+            top: 20px; left: 20px;
+            border-width: 1px 0 0 1px;
+        }
+        .corner-deco.tr {
+            top: 20px; right: 20px;
+            border-width: 1px 1px 0 0;
+        }
+        .corner-deco.bl {
+            bottom: 20px; left: 20px;
+            border-width: 0 0 1px 1px;
+        }
+        .corner-deco.br {
+            bottom: 20px; right: 20px;
+            border-width: 0 1px 1px 0;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 70px; }
+            .letter-paragraph { font-size: 18px; }
+            .proposal-question { font-size: 50px; }
+            .letter-section { padding: 0 25px 80px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Corner decorations -->
+    <div class="corner-deco tl"></div>
+    <div class="corner-deco tr"></div>
+    <div class="corner-deco bl"></div>
+    <div class="corner-deco br"></div>
+
+    <!-- Background glow -->
+    <div class="bg-glow"></div>
+
+    <!-- Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Hero -->
+    <section class="hero">
+        <p class="hero-top-line">A letter from my heart</p>
+        <h1 class="hero-title">Anika</h1>
+        <p class="hero-sub">my everything &nbsp;·&nbsp; my peace &nbsp;·&nbsp; my world</p>
+
+        <div class="scroll-hint">
+            <span>scroll to read</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="divider">
+        <div class="divider-line"></div>
+        <span class="divider-heart">♥</span>
+        <div class="divider-line right"></div>
+    </div>
+
+    <!-- Letter -->
+    <section class="letter-section">
+
+        <div class="letter-label">My Dearest Anika,</div>
+
+        <p class="letter-paragraph">
+            I don't even know where to start, because every time I think about you, my mind just fills with a thousand beautiful things at once. The way your eyes look at me makes me forget everything around me, like the world just fades and it's only you and me in that moment. Your smile has this quiet magic that melts every wall I build after a long and hard day, and suddenly all my stress disappears.
+        </p>
+
+        <p class="letter-paragraph">
+            Your hair, your nose, your laugh, even the way you say my name — <span class="highlight">everything about you feels so perfect to me</span> that sometimes I just sit there wondering how someone like you even exists. And it's not just your beauty, it's your personality — the way you talk, the calm in your voice, the softness in your heart, the kindness you show without even trying.
+        </p>
+
+        <p class="letter-paragraph">
+            When we talk on video calls and I see your face, I literally feel my heart slow down, like everything becomes peaceful. No matter how tired I am, how messed up my day was, you make me feel okay again, you make me feel free, <span class="highlight">you make me feel like I can breathe.</span>
+        </p>
+
+        <p class="letter-paragraph">
+            Sometimes I even doubt myself and wonder if I really deserve you, because you're so beautiful, so pure, so angelic, and I'm just here trying my best not to lose myself in how much I love you. I wish I could do something big for you, something that shows you how much you mean to me, because words never feel enough.
+        </p>
+
+        <p class="letter-paragraph">
+            You are not just someone I love, you are someone I admire, someone I respect, someone I want beside me in every moment of my life — in my happiest days, in my worst nights, in my silence, in my dreams. I don't just want to love you for now, <span class="highlight">I want to wake up next to you, grow with you, laugh with you, protect you, and build a whole life around you.</span>
+        </p>
+
+        <p class="letter-paragraph">
+            You make my world softer, brighter, calmer… and honestly, my whole world feels complete when you're in it.
+        </p>
+
+        <!-- Divider -->
+        <div class="divider">
+            <div class="divider-line"></div>
+            <span class="divider-heart">♥</span>
+            <div class="divider-line right"></div>
+        </div>
+
+        <p class="letter-paragraph">
+            And I want you to know something deeper from my heart — I am just a simple person, a part of the Ummah of our beloved Prophet, and I know I can never reach his level, never love with the perfection he showed, because he is our leader, our example, the most beloved to our Lord. I've learned his stories, I've heard how gentle he was, how kind he was, how he treated with love, respect and mercy.
+        </p>
+
+        <p class="letter-paragraph">
+            I know I can never be like him, but I also know that <span class="highlight">I want to try with all my heart to love you in the purest way I can.</span> The way he cared, the way he showed softness, the way he respected — I want to follow that path as much as I am able. I don't promise perfection, because I'm human and I make mistakes, but I promise effort, sincerity, and a love that comes from the deepest place in my heart.
+        </p>
+
+        <p class="letter-paragraph">
+            I want to be gentle with you, patient with you, protective of you, and respectful to you — not just in happy moments but also in difficult days, when life feels heavy and everything seems uncertain.
+        </p>
+
+        <p class="letter-paragraph">
+            Sometimes when I think about you, I imagine not just this world but the hereafter too. I imagine standing on that Day when everyone will be worried about themselves, when even people will be searching for their own families, and in my heart I would still want to say that <span class="highlight">you are my everything</span>, that I loved you sincerely, that I tried my best to protect your heart and honor your place in my life.
+        </p>
+
+        <p class="letter-paragraph">
+            I want to be someone who makes you feel safe, someone who stands beside you when the world feels overwhelming, someone who reminds you that you are valued, respected, and deeply loved. When I see you, all my stress disappears, my mind becomes calm, and my heart feels lighter, like you are the peace I didn't even know I needed.
+        </p>
+
+        <p class="letter-paragraph">
+            After a long and hard day, just one look at you, one call, one smile, and suddenly everything feels okay again. <span class="highlight">You don't even realize how much you heal me just by being yourself.</span>
+        </p>
+
+        <!-- Divider -->
+        <div class="divider">
+            <div class="divider-line"></div>
+            <span class="divider-heart">♥</span>
+            <div class="divider-line right"></div>
+        </div>
+
+        <p class="letter-paragraph">
+            I don't just love your beauty, I love the comfort you give me, the calm in your voice, the softness in your presence, the way you make me feel safe without even trying. You make me want to become better, stronger, kinder. You make me want to build a future, not just dream about one.
+        </p>
+
+        <p class="letter-paragraph">
+            I want to do things for you, support you, stand with you, grow with you, and give you a life filled with peace, respect, and love. Sometimes I look at you and I wonder if I truly deserve someone like you, because you seem so perfect to me, so gentle, so beautiful in every way, inside and out. But even with that doubt, one thing I know for sure is that <span class="highlight">I will give my hundred percent, my full effort, my whole heart, and everything I have to make you happy.</span>
+        </p>
+
+        <p class="letter-paragraph">
+            I don't just want to love you today, I want to love you tomorrow, and the day after, and every day that comes after that. I want to build a home with you, laugh with you, sit in silence with you, share my worries with you, and be the person you can always lean on.
+        </p>
+
+        <p class="letter-paragraph">
+            You are not just someone I fell for, you are someone I want beside me for life, someone I want to grow old with, <span class="highlight">someone I want to choose again and again no matter what.</span> My heart feels at peace when I think about you, and my world feels complete when you are part of it.
+        </p>
+
+    </section>
+
+    <!-- Proposal -->
+    <section class="proposal-section">
+        <div class="divider">
+            <div class="divider-line"></div>
+            <span class="divider-heart">♥</span>
+            <div class="divider-line right"></div>
+        </div>
+
+        <br><br>
+
+        <p class="proposal-question">
+            So with all my heart, with all my love, and with everything I am —<br>
+            will you marry me?<br>
+            I will give you my whole world.
+        </p>
+
+        <p class="proposal-sub">forever yours &nbsp;·&nbsp; always &nbsp;·&nbsp; in every world</p>
+
+        <span class="final-heart">♥</span>
+    </section>
+
+    <script>
+        // Create particles
+        const particlesContainer = document.getElementById('particles');
+        
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 10 + 8) + 's';
+            particle.style.animationDelay = (Math.random() * 10) + 's';
+            particle.style.width = (Math.random() * 3 + 1) + 'px';
+            particle.style.height = particle.style.width;
+            particlesContainer.appendChild(particle);
+        }
+
+        // Create rose petals
+        for (let i = 0; i < 15; i++) {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            petal.style.left = Math.random() * 100 + '%';
+            petal.style.animationDuration = (Math.random() * 8 + 6) + 's';
+            petal.style.animationDelay = (Math.random() * 10) + 's';
+            petal.style.width = (Math.random() * 6 + 5) + 'px';
+            petal.style.height = petal.style.width;
+            document.body.appendChild(petal);
+        }
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.letter-paragraph, .proposal-question, .proposal-sub, .final-heart, .letter-label').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
